@@ -9,14 +9,14 @@
  * TodoStore
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var TodoConstants = require('../constants/TodoConstants');
-var assign = require('object-assign');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import {EventEmitter} from 'events';
+import TodoConstants from '../constants/TodoConstants';
+import assign from 'object-assign';
 
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
-var _todos = {};
+let _todos = {};
 
 /**
  * Create a TODO item.
@@ -26,11 +26,11 @@ function create(text) {
   // Hand waving here -- not showing how this interacts with XHR or persistent
   // server-side storage.
   // Using the current timestamp + random number in place of a real id.
-  var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+  let id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
   _todos[id] = {
-    id: id,
+    id,
     complete: false,
-    text: text
+    text
   };
 }
 
@@ -52,7 +52,7 @@ function update(id, updates) {
 
  */
 function updateAll(updates) {
-  for (var id in _todos) {
+  for (let id in _todos) {
     update(id, updates);
   }
 }
@@ -69,21 +69,21 @@ function destroy(id) {
  * Delete all the completed TODO items.
  */
 function destroyCompleted() {
-  for (var id in _todos) {
+  for (let id in _todos) {
     if (_todos[id].complete) {
       destroy(id);
     }
   }
 }
 
-var TodoStore = assign({}, EventEmitter.prototype, {
+let TodoStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Tests whether all the remaining TODO items are marked as completed.
    * @return {boolean}
    */
-  areAllComplete: function() {
-    for (var id in _todos) {
+  areAllComplete() {
+    for (let id in _todos) {
       if (!_todos[id].complete) {
         return false;
       }
@@ -95,32 +95,32 @@ var TodoStore = assign({}, EventEmitter.prototype, {
    * Get the entire collection of TODOs.
    * @return {object}
    */
-  getAll: function() {
+  getAll() {
     return _todos;
   },
 
-  emitChange: function() {
+  emitChange() {
     this.emit(CHANGE_EVENT);
   },
 
   /**
    * @param {function} callback
    */
-  addChangeListener: function(callback) {
+  addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
   /**
    * @param {function} callback
    */
-  removeChangeListener: function(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
 // Register callback to handle all updates
-AppDispatcher.register(function(action) {
-  var text;
+AppDispatcher.register((action) => {
+  let text;
 
   switch(action.actionType) {
     case TodoConstants.TODO_CREATE:
@@ -173,4 +173,4 @@ AppDispatcher.register(function(action) {
   }
 });
 
-module.exports = TodoStore;
+export default TodoStore;

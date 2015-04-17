@@ -7,45 +7,43 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/TodoActions');
+import React, {PropTypes as ReactPropTypes} from 'react';
+import TodoActions from '../actions/TodoActions';
 
-var Footer = React.createClass({
-
-  propTypes: {
-    allTodos: ReactPropTypes.object.isRequired
-  },
+export default class Footer extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
   /**
    * @return {object}
    */
-  render: function() {
-    var allTodos = this.props.allTodos;
-    var total = Object.keys(allTodos).length;
+  render() {
+    let allTodos = this.props.allTodos;
+    let total = Object.keys(allTodos).length;
 
     if (total === 0) {
       return null;
     }
 
-    var completed = 0;
-    for (var key in allTodos) {
+    let completed = 0;
+    for (let key in allTodos) {
       if (allTodos[key].complete) {
         completed++;
       }
     }
 
-    var itemsLeft = total - completed;
-    var itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
+    let itemsLeft = total - completed;
+    let itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
     itemsLeftPhrase += 'left';
 
     // Undefined and thus not rendered if no completed items are left.
-    var clearCompletedButton;
+    let clearCompletedButton;
     if (completed) {
       clearCompletedButton =
         <button
           id="clear-completed"
-          onClick={this._onClearCompletedClick}>
+          onClick={this._onClearCompletedClick.bind(this)}>
           Clear completed ({completed})
         </button>;
     }
@@ -61,15 +59,17 @@ var Footer = React.createClass({
         {clearCompletedButton}
       </footer>
     );
-  },
+  }
 
   /**
    * Event handler to delete all completed TODOs
    */
-  _onClearCompletedClick: function() {
+  _onClearCompletedClick() {
     TodoActions.destroyCompleted();
   }
 
-});
+};
 
-module.exports = Footer;
+Footer.propTypes = {
+  allTodos: ReactPropTypes.object.isRequired
+};

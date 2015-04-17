@@ -8,13 +8,13 @@
     "flux": "^2.0.1",
     "keymirror": "~0.1.0",
     "object-assign": "^1.0.0",
-    "react": "^0.12.0"
+    "react": "^0.13.0"
   },
   "devDependencies": {
+    "babelify": "^6.0.2",
     "browserify": "^6.2.0",
     "envify": "^3.0.0",
     "jest-cli": "~0.1.17",
-    "reactify": "^0.15.2",
     "uglify-js": "~2.4.15",
     "watchify": "^2.1.1"
   },
@@ -26,7 +26,7 @@
   "author": "Bill Fisher",
   "browserify": {
     "transform": [
-      "reactify",
+      "babelify",
       "envify"
     ]
   },

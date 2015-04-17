@@ -7,32 +7,29 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/TodoActions');
-var TodoItem = require('./TodoItem.react');
+import React, {PropTypes as ReactPropTypes} from 'react';
+import TodoActions from '../actions/TodoActions';
+import TodoItem from './TodoItem.react';
 
-var MainSection = React.createClass({
-
-  propTypes: {
-    allTodos: ReactPropTypes.object.isRequired,
-    areAllComplete: ReactPropTypes.bool.isRequired
-  },
+export default class MainSection extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
   /**
    * @return {object}
    */
-  render: function() {
+  render() {
     // This section should be hidden by default
     // and shown when there are todos.
     if (Object.keys(this.props.allTodos).length < 1) {
       return null;
     }
 
-    var allTodos = this.props.allTodos;
-    var todos = [];
+    let allTodos = this.props.allTodos;
+    let todos = [];
 
-    for (var key in allTodos) {
+    for (let key in allTodos) {
       todos.push(<TodoItem key={key} todo={allTodos[key]} />);
     }
 
@@ -41,22 +38,25 @@ var MainSection = React.createClass({
         <input
           id="toggle-all"
           type="checkbox"
-          onChange={this._onToggleCompleteAll}
+          onChange={this._onToggleCompleteAll.bind(this)}
           checked={this.props.areAllComplete ? 'checked' : ''}
         />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul id="todo-list">{todos}</ul>
       </section>
     );
-  },
+  }
 
   /**
    * Event handler to mark all TODOs as complete
    */
-  _onToggleCompleteAll: function() {
+  _onToggleCompleteAll() {
     TodoActions.toggleCompleteAll();
   }
 
-});
+};
 
-module.exports = MainSection;
+MainSection.propTypes = {
+    allTodos: ReactPropTypes.object.isRequired,
+    areAllComplete: ReactPropTypes.bool.isRequired
+};
